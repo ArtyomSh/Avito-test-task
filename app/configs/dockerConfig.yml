@@ -1,0 +1,10 @@
+---
+listen:
+  port:  8000
+postgres:
+  host: postgres
+  port: 5432
+  database: postgres
+  username: postgres
+  password: pass
+
