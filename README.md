@@ -3,7 +3,7 @@ executed by Artem Shmakov
 ## Installation & Run
 ```bash
 # Download this project
-git clone ...
+git clone git@github.com:ArtyomSh/Avito-test-task.git
 ```
 You can either use the docker to get the application up or run it on a local machine.
 # Docker-compose
@@ -11,12 +11,16 @@ You can either use the docker to get the application up or run it on a local mac
 # Build and Run
 cd app
 docker-compose up --build app
+
+# API-endpoint localhost:8888/segment
 ```
 # Local machine
 ```bash
 #build and run
 cd app
 go run cmd/main/main.go
+
+# API-endpoint localhost:8000/segment
 ```
 you can change the startup parameters in the files `configs/config.yml` or `configs/dockerConfig.yml`
 
@@ -44,6 +48,15 @@ you can change the startup parameters in the files `configs/config.yml` or `conf
 |            └── helpers.go
 └── Dockerfile
 └── docker-compose.yml
+```
+## Swagger
+local machine: `http://localhost:8000/swagger/index.html#/` 
+docker-compose: `http://localhost:8888/swagger/index.html#/`
+
+If you make changes to swagger, run the following command afterward:
+```bash
+cd app
+go run github.com/swaggo/swag/cmd/swag@v1.8.12 init --parseDependency --parseInternal --output ./docs -g root.go --dir ./internal/handlers
 ```
 
 ## API
