@@ -22,3 +22,5 @@ go.work
 
 # mac os stuff 
 *.DS_Store
+
+*.idea
