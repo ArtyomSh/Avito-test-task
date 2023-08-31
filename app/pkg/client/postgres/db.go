@@ -6,10 +6,9 @@ import (
 	"fmt"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"log"
 )
 
-func Init(cfg *config.Config) *gorm.DB {
+func Init(cfg *config.Config) (*gorm.DB, error) {
 
 	userName := cfg.Postrgres.Username
 	password := cfg.Postrgres.Password
@@ -21,12 +20,7 @@ func Init(cfg *config.Config) *gorm.DB {
 
 	db, err := gorm.Open(postgres.Open(dbUri), &gorm.Config{})
 
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	fmt.Println("database connected")
 	db.AutoMigrate(&models.Segment{})
 
-	return db
+	return db, err
 }

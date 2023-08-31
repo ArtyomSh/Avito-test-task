@@ -1,0 +1,189 @@
+basePath: /
+definitions:
+  gorm.DeletedAt:
+    properties:
+      time:
+        type: string
+      valid:
+        description: Valid is true if Time is not NULL
+        type: boolean
+    type: object
+  handlers.AddUserPost:
+    properties:
+      add:
+        items:
+          type: string
+        type: array
+      delete:
+        items:
+          type: string
+        type: array
+    type: object
+  handlers.Response:
+    properties:
+      error:
+        type: string
+      message: {}
+    type: object
+  models.Segment:
+    properties:
+      deleted:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: integer
+      name:
+        type: string
+      users:
+        items:
+          $ref: '#/definitions/models.User'
+        type: array
+    type: object
+  models.User:
+    properties:
+      ID:
+        type: integer
+      segments:
+        items:
+          $ref: '#/definitions/models.Segment'
+        type: array
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: aa.shmakov2@gmail.com
+    name: Artem Shmakov
+  description: avito test task
+  termsOfService: http://swagger.io/terms/
+  title: Segments API
+  version: "1.0"
+paths:
+  /segment:
+    delete:
+      consumes:
+      - application/json
+      description: Удаляет сегмент по имени
+      parameters:
+      - description: JSON-info - segment name
+        in: body
+        name: segment
+        required: true
+        schema:
+          $ref: '#/definitions/models.Segment'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Delete segment
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "404":
+          description: ' httputil.HTTPError'
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "500":
+          description: ' httputil.HTTPError'
+          schema:
+            $ref: '#/definitions/handlers.Response'
+      summary: Удаление сегмента
+      tags:
+      - segments
+    post:
+      consumes:
+      - application/json
+      description: Создает новый сегмент с данными из запроса
+      parameters:
+      - description: JSON-info - segment name
+        in: body
+        name: segment
+        required: true
+        schema:
+          $ref: '#/definitions/models.Segment'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Create segment
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "500":
+          description: ' httputil.HTTPError'
+          schema:
+            $ref: '#/definitions/handlers.Response'
+      summary: Добавление нового сегмента
+      tags:
+      - segments
+  /segment/{id}:
+    post:
+      consumes:
+      - application/json
+      description: Возвращает список сегментов, в которых состоит пользователь с заданным
+        id.
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: list of segments
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "400":
+          description: ' httputil.HTTPError'
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "404":
+          description: ' httputil.HTTPError'
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "500":
+          description: ' httputil.HTTPError'
+          schema:
+            $ref: '#/definitions/handlers.Response'
+      summary: Получение всех сегментов пользователя
+      tags:
+      - segments
+  /user/{id}:
+    post:
+      consumes:
+      - application/json
+      description: Если польщователя с таким id не существует, создает пользователя.
+        Добавляет и удаляет его из списков сегментов.
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: integer
+      - description: JSON-info - add and delete lists
+        in: body
+        name: segments
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.AddUserPost'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Add/Delete segments from user
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "400":
+          description: ' httputil.HTTPError'
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "404":
+          description: ' httputil.HTTPError'
+          schema:
+            $ref: '#/definitions/handlers.Response'
+        "500":
+          description: ' httputil.HTTPError'
+          schema:
+            $ref: '#/definitions/handlers.Response'
+      summary: Добавление пользователя в сегмент
+      tags:
+      - user
+swagger: "2.0"
